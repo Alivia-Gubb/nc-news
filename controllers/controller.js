@@ -1,4 +1,7 @@
 const { fetchAllTopics } = require('../models/model')
+const fs = require("fs")
+const endpoints = require('../endpoints.json')
+
 
 const getAllTopics = (req,res,next) => {
     fetchAllTopics()
@@ -7,7 +10,10 @@ const getAllTopics = (req,res,next) => {
     })
 
 }
+const getEndPoints = (req,res,next) => {
+    res.status(200).send(endpoints)
+}
 
 
 
-module.exports = {getAllTopics}
+module.exports = {getAllTopics, getEndPoints}
