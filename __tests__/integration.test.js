@@ -3,7 +3,11 @@ const request = require('supertest')
 const connection = require('../db/connection')
 const testData = require('../db/data/test-data')
 const seed = require('../db/seeds/seed')
-//add before each when adding POST PATCH DELETE
+const fs = require('fs')
+const path = require('path')
+const endPointJson = require('../endpoints.json')
+
+
 afterAll(() => connection.end());
 beforeEach(() => seed(testData));
 
@@ -22,6 +26,18 @@ describe("GET /api/topics", () => {
                 })
             })
         }) 
-      //invalid url  
+        
     })
 })
+
+describe("GET /api", () => {
+    test("Return an accurate JSON object containing documentation detailing each endpoint", () => {
+        return request(app)
+        .get('/api')
+        .then(({ body }) => {
+            expect(body).toEqual(endPointJson)  
+            })
+                
+            })
+        })
+    
