@@ -40,7 +40,7 @@ describe("GET /api", () => {
     })
 })
 
-//remember make error handling tests
+
 describe("GET /api/articles/:article_id", () => {
     test('should return an article object and get an article by its id', () => {
         return request(app)
@@ -79,5 +79,39 @@ describe("GET /api/articles/:article_id", () => {
     });
             
 });
+
+describe("GET /api/articles", () => {
+    test("Status: 200, respond with all articles", () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(13);
+            body.articles.forEach((article) => {
+                expect(article).toMatchObject({
+                    author : expect.any(String),
+                    title : expect.any(String),
+                    article_id : expect.any(Number),
+                    body : expect.any(String),
+                    topic : expect.any(String),
+                    created_at : expect.any(String),
+                    votes : expect.any(Number),
+                    article_img_url : expect.any(String),
+                })
+            })
+        }) 
+        
+    })
+})
+
+
         
 
+//author
+// title
+// article_id
+// topic
+// created_at
+// votes
+// article_img_url
+// comment_count
