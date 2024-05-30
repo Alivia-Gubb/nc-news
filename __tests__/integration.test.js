@@ -7,7 +7,6 @@ const fs = require('fs')
 const path = require('path')
 const endPointJson = require('../endpoints.json')
 
-
 afterAll(() => connection.end());
 beforeEach(() => seed(testData));
 
@@ -92,26 +91,36 @@ describe("GET /api/articles", () => {
                     author : expect.any(String),
                     title : expect.any(String),
                     article_id : expect.any(Number),
-                    body : expect.any(String),
                     topic : expect.any(String),
                     created_at : expect.any(String),
                     votes : expect.any(Number),
                     article_img_url : expect.any(String),
+                    comment_count: expect.any(String)
                 })
             })
         }) 
-        
+    })
+
+    test("Articles are in descending date order", () => {
+        return request(app)
+        .get('/api/articles')
+        .expect(200)
+        .then(({ body }) => {
+            expect(body.articles).toHaveLength(13);
+            expect(body.articles).toBeSortedBy("created_at", {
+                descending: true
+            })
+        }) 
+    })
+
+    test("Articles do not contain article body", () => {
+        return request(app)
+            .get('/api/articles')
+            .expect(200)
+            .then(({ body }) => {
+                body.articles.forEach((article) => {
+                    expect(article).not.toHaveProperty('body')
+                })
+            })
     })
 })
-
-
-        
-
-//author
-// title
-// article_id
-// topic
-// created_at
-// votes
-// article_img_url
-// comment_count
