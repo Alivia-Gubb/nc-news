@@ -220,3 +220,78 @@ describe('POST /api/articles/:article_id/comments', () => {
             });
     });      
 })
+
+describe('PATCH /api/articles/:article_id', () => {
+    const testPatch = {
+        inc_votes : 50
+    }
+
+    const incorrectPatch = {
+        inc_votes : "fifty"
+    }
+
+    const articleOne = {
+        article_id: 1,
+        title: 'Living in the shadow of a great man',
+        topic: 'mitch',
+        author: 'butter_bridge',
+        body: 'I find this existence challenging',
+        created_at: '2020-07-09T20:11:00.000Z',
+        votes: 100,
+        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700'
+    }
+    
+    test('responds with an updated article with correct vote count', () => {
+        return request(app)
+            .patch('/api/articles/1')
+            .send(testPatch)
+            .expect(200)
+            .then(({ body }) => {
+                expect(body.article).toEqual(
+                    {
+                        ...articleOne,
+                        votes: articleOne.votes + testPatch.inc_votes
+                    }
+                )
+            })
+    })
+
+    test('responds with 400 if article ID is invalid', () => {
+        return request(app)
+            .patch('/api/articles/one')
+            .send(testPatch)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Invalid ID')
+            })
+    })
+
+    test('responds with 404 if article ID does not exist', () => {
+        return request(app)
+            .patch('/api/articles/99999')
+            .send(testPatch)
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('No article found with ID: 99999')
+            })
+    })
+
+    test('responds with 400 if request body is empty', () => {
+        return request(app)
+            .patch('/api/articles/1')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Empty body')
+            })
+    })
+
+    test('responds with 400 if request body is invalid', () => {
+        return request(app)
+            .patch('/api/articles/1')
+            .send(incorrectPatch)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Incorrect body')
+            })
+    })
+})

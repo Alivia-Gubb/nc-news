@@ -105,5 +105,48 @@ const insertComment = (articleId, newComment) => {
             RETURNING *;`, [username, body, articleId])
         .then(({ rows }) => rows[0])
 }
+const updateArticleVotes = (articleId, newVotes) => {
+    // check if articleId is a number
+    if(!Number(articleId)) {
+        return Promise.reject({
+            status : 400,
+            msg : 'Invalid ID'
+        });
+    }
+    
+    // check if there are votes
+    if(!newVotes) {
+        return Promise.reject({
+            status : 400,
+            msg : 'Empty body'
+        });
+    }
 
-module.exports = {fetchArticlesById, fetchArticles, fetchArticleComments, insertComment};
+    // check if votes is number
+    if(!Number(newVotes)) {
+        return Promise.reject({
+            status : 400,
+            msg : 'Incorrect body'
+        });
+    }
+    return db
+        .query(`
+            UPDATE articles
+            SET votes = votes + $1
+            WHERE article_id = $2
+            RETURNING *;
+        `, [ newVotes, articleId ])
+        .then(({ rows }) => {
+            // check if any rows updated
+            if (rows.length === 0) {
+                return Promise.reject({
+                    status : 404,
+                    msg : `No article found with ID: ${articleId}`
+                })
+            }
+
+            return rows[0]
+        })
+}
+
+module.exports = {fetchArticlesById, fetchArticles, fetchArticleComments, insertComment, updateArticleVotes};

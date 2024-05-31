@@ -63,5 +63,44 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:articles_id/comments": {
+    "description": "creates a comment for specified article by id",
+    "queries": [],
+    "exampleRequest": {
+      "username": "butter_bridge",
+      "body": "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky."
+    },
+    "exampleResponse": {
+      "comment":
+        {
+          "comment_id": 20,
+          "votes": 0,
+          "created_at": 1604113380000,
+          "author": "butter_bridge",
+          "body": "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+          "article_id": 1
+        }
+    }
+  },
+  "PATCH /api/articles/:articles_id": {
+    "description": "updates the vote count for specified article by id",
+    "queries": [],
+    "exampleRequest": {
+      "inc_votes": 50
+    },
+    "exampleResponse": {
+      "article":
+        {
+          "title": "Running a Node App",
+          "topic": "coding",
+          "author": "jessjelly",
+          "body": "This is part two of a series on how to get up and running with Systemd and Node.js. This part dives deeper into how to successfully run your app with systemd long-term, and how to set it up in a production environment.",
+          "created_at": 1604728980000,
+          "votes": 60,
+          "article_img_url":
+            "https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?w=700&h=700"
+        }
+    }
   }
 }
