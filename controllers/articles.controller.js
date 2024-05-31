@@ -1,4 +1,4 @@
-const { fetchArticlesById, fetchArticles, fetchArticleComments, insertComment } = require("../models/articles.model");
+const { fetchArticlesById, fetchArticles, fetchArticleComments, insertComment, updateArticleVotes} = require("../models/articles.model");
 
 const fs = require("fs");
 
@@ -32,4 +32,14 @@ const addComment = (req, res, next) => {
         .catch(next)
 }
 
-module.exports = { getArticlesById, getAllArticles, getArticleComments, addComment }
+const updateVotes = (req,res,next) => {
+    const articleId = req.params.article_id
+    const newVotes = req.body.inc_votes;
+    updateArticleVotes(articleId, newVotes)
+        .then((article) => {
+            res.status(200).send({ article })
+        })
+        .catch(next)
+}
+
+module.exports = { getArticlesById, getAllArticles, getArticleComments, addComment,updateVotes }
