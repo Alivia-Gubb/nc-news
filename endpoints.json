@@ -102,5 +102,9 @@
             "https://images.pexels.com/photos/11035380/pexels-photo-11035380.jpeg?w=700&h=700"
         }
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes comment with specified comment id",
+    "queries": []
   }
 }

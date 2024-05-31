@@ -149,4 +149,31 @@ const updateArticleVotes = (articleId, newVotes) => {
         })
 }
 
-module.exports = {fetchArticlesById, fetchArticles, fetchArticleComments, insertComment, updateArticleVotes};
+const deleteComment = (commentId) => {
+    // check if commentId is a number
+    if(!Number(commentId)) {
+        return Promise.reject({
+            status : 400,
+            msg : 'Invalid ID'
+        });
+    }
+
+    return db.query(`
+        DELETE FROM comments
+        WHERE comment_id = $1
+        RETURNING *;
+    `, [ commentId ])
+    .then(({ rows }) => {
+        // check if any rows updated
+        if (rows.length === 0) {
+            return Promise.reject({
+                status : 404,
+                msg : `No comment found with ID: ${commentId}`
+            })
+        }
+
+        return rows[0]
+    })
+}
+
+module.exports = {fetchArticlesById, fetchArticles, fetchArticleComments, insertComment, updateArticleVotes, deleteComment};
