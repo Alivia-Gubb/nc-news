@@ -72,4 +72,38 @@ const fetchArticleComments = (articleId) => {
     })
 }
 
-module.exports = {fetchArticlesById, fetchArticles, fetchArticleComments};
+const insertComment = (articleId, newComment) => {
+    if(!Number(articleId) || !newComment) {
+        return Promise.reject({
+            status : 400,
+            msg : 'Bad request'
+        });
+    }
+
+    if(!newComment.username || !newComment.body) {
+        return Promise.reject({
+            status : 400,
+            msg : 'Bad request'
+        });
+    }
+
+    const {username,body} = newComment;
+    return db
+        .query(`
+            INSERT INTO comments
+                (
+                    author,
+                    body,
+                    article_id
+                )
+            VALUES 
+                (
+                    $1,
+                    $2,
+                    $3
+                )
+            RETURNING *;`, [username, body, articleId])
+        .then(({ rows }) => rows[0])
+}
+
+module.exports = {fetchArticlesById, fetchArticles, fetchArticleComments, insertComment};
