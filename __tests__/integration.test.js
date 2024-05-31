@@ -295,3 +295,31 @@ describe('PATCH /api/articles/:article_id', () => {
             })
     })
 })
+
+describe('DELETE /api/comments/:comment_id', () => {
+    const commentId = 6
+    
+    test('responds with 204 and no content', () => {
+        return request(app)
+            .delete(`/api/comments/${commentId}`)
+            .expect(204, '')
+    })
+
+    test('responds with 400 if comment ID is invalid', () => {
+        return request(app)
+            .delete('/api/comments/one')
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Invalid ID')
+            })
+    })
+
+    test('responds with 404 if comment ID does not exist', () => {
+        return request(app)
+            .delete('/api/comments/99999')
+            .expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('No comment found with ID: 99999')
+            })
+    })
+})
