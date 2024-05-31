@@ -176,3 +176,47 @@ describe("GET /api/articles/:article_id/comments", () => {
     });
             
 });
+
+describe('POST /api/articles/:article_id/comments', () => {
+    const testComment = {
+        username: "icellusedkars",
+        body: "Test comment."
+    }
+
+    const articleId = 1
+
+    test('Article responds with posted comment', () => {
+        return request(app)
+            .post(`/api/articles/${articleId}/comments`)
+            .send(testComment)
+            .expect(201)
+            .then(({body}) => {
+                expect(body.comment.author).toEqual(testComment.username)
+                expect(body.comment.body).toEqual(testComment.body)
+                expect(body.comment.article_id).toEqual(articleId)
+            })
+    });
+
+    test('status: 400, responds with an error message when body doesn\'t exist', () => {
+        return request(app)
+            .post(`/api/articles/${articleId}/comments`)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Bad request')
+            });
+    });
+
+    test('status: 400, responds with an error message when body is malformed', () => {
+        const badComment = {
+            body: "Bad comment"
+        }
+
+        return request(app)
+            .post(`/api/articles/${articleId}/comments`)
+            .send(badComment)
+            .expect(400)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Bad request')
+            });
+    });      
+})
