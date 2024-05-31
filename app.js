@@ -1,6 +1,7 @@
 const { getArticlesById, getAllArticles, getArticleComments, addComment, updateVotes  } = require('./controllers/articles.controller');
 const { getAllTopics } = require('./controllers/topics.controller')
 const { getEndPoints } = require('./controllers/api.controller') 
+const { getUsers } = require('./controllers/users.controller')
 const bodyParser = require('body-parser')
 
 const express = require('express');
@@ -22,6 +23,7 @@ app.post('/api/articles/:article_id/comments', addComment)
 
 app.patch('/api/articles/:article_id', updateVotes)
 
+app.get('/api/users', getUsers)
 
 app.use((err,req,res,next) => {
     res.status(err.status).send({ msg : err.msg })
