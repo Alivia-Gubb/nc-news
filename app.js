@@ -2,9 +2,11 @@ const { getArticlesById, getAllArticles, getArticleComments, addComment, updateV
 const { getAllTopics } = require('./controllers/topics.controller')
 const { getEndPoints } = require('./controllers/api.controller') 
 const bodyParser = require('body-parser')
-
+const cors = require('cors');
 const express = require('express');
 const app = express();
+
+app.use(cors());
 
 app.use(bodyParser.json());
 
