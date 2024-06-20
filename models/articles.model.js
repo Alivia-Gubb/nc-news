@@ -88,6 +88,7 @@ const insertComment = (articleId, newComment) => {
     }
 
     const {username,body} = newComment;
+    console.log("newComment", newComment);
     return db
         .query(`
             INSERT INTO comments
@@ -103,7 +104,10 @@ const insertComment = (articleId, newComment) => {
                     $3
                 )
             RETURNING *;`, [username, body, articleId])
-        .then(({ rows }) => rows[0])
+        .then(({ rows }) => {
+            console.log(rows);
+            return rows[0]
+        }).catch(err => console.log("error in add comments", err))
 }
 const updateArticleVotes = (articleId, newVotes) => {
     // check if articleId is a number
